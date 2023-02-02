@@ -1,0 +1,94 @@
+#include "N76E003.h"
+#include "SFR_Macro.h"
+#include "Function_define.h"
+#include "Common.h"
+#include "Delay.h"
+//#include "lcd.h"
+#define bit_to_voltage_ratio 0.001220703125 // 5.0V divided by 4096 For 12-Bit ADC
+void setup (void);
+unsigned int ADC_read(void);
+float voltage;
+char str_voltage[20];
+
+ 
+void sw_delay (int ms);
+int p=0;
+//char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
+
+
+void main(void){
+             int adc_data;
+	
+             setup();            
+	
+             while(1){
+									 
+							 
+					    P14 = 1;
+        sw_delay(500);
+							 
+		  printf("\n Hello world!");						 
+							 
+    	printf("  LED Status:%d", P14);
+							 
+						
+							 		 
+             adc_data = ADC_read();						 
+							 
+							 printf("  ADC:%d ",adc_data);	
+							 
+           voltage = adc_data * bit_to_voltage_ratio;
+           sprintf( str_voltage, "Volt: %0.2fV", voltage);
+              
+							 
+         //   Timer3_Delay100ms(500);  this is uncomment 2 warning show and led not blink
+						 
+						 P14 = 0;
+             sw_delay(500);			 
+						 
+						 	
+ if(P05 == 0){ P15 = 0;  }
+     else { P15 = 1; }  
+							 
+			 						 					 					 
+    }
+  }
+
+	
+void setup (void){
+    Set_All_GPIO_Quasi_Mode;
+	
+    Enable_ADC_AIN0;
+	
+	  InitialUART0_Timer1(115200);
+	  TI = 1;
+	
+	//P05_OpenDrain_Mode;
+  P14_Quasi_Mode;
+  P15_Quasi_Mode;
+  P05_Input_Mode;  
+	//Set_All_GPIO_Quasi_Mode;
+	//Enable_ADC_AIN7;
+	//Timer3_Delay100ms(500);
+}
+
+
+unsigned int ADC_read(void){
+  register unsigned int adc_value = 0x0000;
+  clr_ADCF;
+  set_ADCS;                  
+  while(ADCF == 0);
+  adc_value = ADCRH;
+  adc_value <<= 4;
+  adc_value |= ADCRL;
+  return adc_value;
+}
+
+ 
+// Software-based delay. Time is not accurate.
+void sw_delay (int ms){
+int a, b;
+for (a=0; a<1296; a++){
+for (b=0; b<ms; b++);
+}
+}
