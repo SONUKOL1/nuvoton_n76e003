@@ -1,0 +1,65 @@
+#include <ArduinoJson.h>
+
+void setup() {
+  Serial.begin(115200);
+}
+
+void loop() {
+  if (Serial.available()) {
+    StaticJsonDocument<500> doc;
+    DeserializationError err = deserializeJson(doc, Serial);
+    if (err) {
+      Serial.print(" error:");
+      Serial.println(err.c_str());
+      return;
+    }
+    // serializeJson(doc, Serial);
+    // Serial.println();
+
+    if (doc.containsKey("ADC0")) {  //if ADC0 available in or out
+      int adc0 = doc["ADC0"];
+      Serial.print(adc0);
+    }
+
+    if (doc.containsKey("ADC1")) {
+      int adc1 = doc["ADC1"];
+      Serial.print(adc1);
+    }
+
+    if (doc.containsKey("ADC2")) {  //if ADC0 available in or out
+      int adc2 = doc["ADC2"];
+      Serial.print(adc2);
+    }
+
+    if (doc.containsKey("ADC3")) {
+      int adc3 = doc["ADC3"];
+      Serial.print(adc3);
+    }
+    if (doc.containsKey("ADC4")) {  //if ADC0 available in or out
+      int adc4 = doc["ADC4"];
+      Serial.print(adc4);
+    }
+
+    if (doc.containsKey("ADC5")) {
+      int adc5 = doc["ADC5"];
+      Serial.print(adc5);
+    }
+    if (doc.containsKey("ADC6")) {  //if ADC0 available in or out
+      int adc6 = doc["ADC6"];
+      Serial.print(adc6);
+    }
+
+    if (doc.containsKey("ADC7")) {
+      int adc7 = doc["ADC7"];
+      Serial.print(adc7);
+    }
+
+    if (doc.containsKey("ADCRef")) {
+      int adcref = doc["ADCRef"];
+      Serial.println(adcref);
+    }
+    
+    // Serial.println();
+
+  }
+}
