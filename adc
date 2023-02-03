@@ -9,6 +9,7 @@ unsigned int ADC_read();
 float voltage;
 char str_voltage[20];
 
+int myArray[9];
  
 void sw_delay (int ms);
 int p=0;
@@ -35,44 +36,52 @@ void main(void){
 					    P14 = 1;
         sw_delay(100);
 							 
-		  printf("\n Hello world!");						 
+		//  printf("\n Hello world!");						 
 							 
-    	printf("  LED Status:%d", P14);
+    //	printf("  LED Status:%d", P14);
 						
 							 
 							 Enable_ADC_AIN0;
-							 printf(" ADC0:%d",ADC_read());	
+						//	 printf(" ADC0:%d",ADC_read());	
+							 myArray[0]= ADC_read();
 							 Disable_ADC;
 							 
 							Enable_ADC_AIN1;
-							printf(" ADC1:%d",ADC_read());
+						//	printf(" ADC1:%d",ADC_read()); 
+							 myArray[1]=ADC_read();
               Disable_ADC;							 
 							 
 								 Enable_ADC_AIN2;
-							 printf(" ADC2:%d",ADC_read());	
+						//	 printf(" ADC2:%d",ADC_read());	
+							 myArray[2]= ADC_read();
 							 Disable_ADC;
 							 
 						/*	Enable_ADC_AIN3;
 							printf(" ADC3:%d",ADC_read());	  */
 							 
 							 Enable_ADC_AIN4;
-							 printf(" ADC4:%d",ADC_read());	
+							// printf(" ADC4:%d",ADC_read());	 
+							 myArray[4]= ADC_read();
 							 Disable_ADC;
 							 
 							Enable_ADC_AIN5;
-							printf(" ADC5:%d",ADC_read());	  
+					//		printf(" ADC5:%d",ADC_read());	
+							myArray[5]= ADC_read();
 							 Disable_ADC;
 							 
 							  Enable_ADC_AIN6;
-							 printf(" ADC6:%d",ADC_read());	
+							// printf(" ADC6:%d",ADC_read());	 
+							 myArray[6]= ADC_read();
 							 Disable_ADC;
 							 
 							Enable_ADC_AIN7;
-							printf("  ADC7:%d",ADC_read());	 
+						//	printf("  ADC7:%d",ADC_read());	 
+							myArray[7]= ADC_read();
 							 Disable_ADC;
 							 
 							Enable_ADC_BandGap;
-							printf(" ADCref:%d",ADC_read());	 
+						//	printf(" ADCref:%d",ADC_read());	
+							myArray[8]= ADC_read();
 							Disable_ADC;
 							 
          //  voltage = ADC_read() * bit_to_voltage_ratio;
@@ -82,11 +91,16 @@ void main(void){
          //   Timer3_Delay100ms(500);  this is uncomment 2 warning show and led not blink 
 						 
 						 	
- if(P12 == 0){ P15 = 0; printf(" P12:0"); }
-     else { P15 = 1;  printf(" P12:1"); }				 
+ if(P12 == 0){ P15 = 0; } // printf(" P12:0"); }
+     else { P15 = 1; } // printf(" P12:1"); }				 
 			 						 					 					
     	 P14 = 0;
        sw_delay(100);			
+		 
+		 
+ printf("{\"ADC0\":%u,\"ADC1\":%u,\"ADC2\":%u,\"ADC3\":%u,\"ADC4\":%u}",myArray[0] ,myArray[1] ,myArray[2],myArray[3], myArray[4]);
+  printf("{\"ADC5\":%u,\"ADC6\":%u,\"ADC7\":%u,\"ADCRef\":%u}",myArray[5],myArray[6],myArray[7],myArray[8]);
+		 printf("\n"); 
 		 
     }
   }
