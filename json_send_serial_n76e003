@@ -117,20 +117,16 @@ unsigned int ADC_read(void){
 
 unsigned int ADC_average(void)
 {
-    signed char samples = 16;
-    unsigned long value = 0;
-    
+    signed char samples = 50;
+    unsigned long value = 0;   
     while(samples > 0)
     {
         value += ((unsigned long)ADC_read());
         samples--;
-    };
-    
-    value >>= 4;
-    
+    }  
+    value /= 50; 
     return ((unsigned int)value);
 }
-
 
  
 // Software-based delay. Time is not accurate.
