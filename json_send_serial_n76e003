@@ -11,7 +11,7 @@ char str_voltage[20];
 
 int myArray[9];
  unsigned int ADC_average(void);
-void sw_delay (int ms);
+
 int p=0;
 int adc_data;
 
@@ -28,13 +28,12 @@ void main(void){
   P15_Quasi_Mode;
   P12_Input_Mode;  
 	//Set_All_GPIO_Quasi_Mode;
-	//Enable_ADC_AIN7;
-	//Timer3_Delay100ms(500);          
+	//Enable_ADC_AIN7;       
 	
   while(1){
 									 						 
-					    P14 = 1;
-        sw_delay(100);
+					//    P14 = 1;
+       // Timer0_Delay1ms(100);
 							 
 		   //  printf("\n Hello world!");						 
 												 
@@ -86,19 +85,17 @@ void main(void){
          //  sprintf( str_voltage, "Volt: %0.2fV", voltage);
          //    printf(" ADCr:%s",str_voltage); 
 							 
-         //   Timer3_Delay100ms(500);  this is uncomment 2 warning show and led not blink 				 
-						 	
+		 						 	
  if(P12 == 0){ P15 = 0; } // printf(" P12:0"); }
      else { P15 = 1; } // printf(" P12:1"); }				 
 			 						 					 					
-    	 P14 = 0;
-       sw_delay(100);			
-		 
+    	 P14 =! P14;
 		 
  printf("{\"ADC0\":%u,\"ADC1\":%u,\"ADC2\":%u,\"ADC3\":%u,\"ADC4\":%u}",myArray[0] ,myArray[1] ,myArray[2],myArray[3], myArray[4]);
   printf("{\"ADC5\":%u,\"ADC6\":%u,\"ADC7\":%u,\"ADCRef\":%u}",myArray[5],myArray[6],myArray[7],myArray[8]);
 		 printf("\n"); 
 		 
+		 Timer0_Delay1ms(100);	
     }
   }
 
@@ -115,8 +112,7 @@ unsigned int ADC_read(void){
 }
 
 
-unsigned int ADC_average(void)
-{
+unsigned int ADC_average(void){
     int number_of_samples = 50;
     unsigned long sum_of_readings = 0;
     int average , count = 0;
@@ -128,13 +124,4 @@ unsigned int ADC_average(void)
     }
     average = sum_of_readings / number_of_samples;
     return average;
-}
-
- 
-// Software-based delay. Time is not accurate.
-void sw_delay (int ms){
-int a, b;
-for (a=0; a<1296; a++){
-for (b=0; b<ms; b++);
-}
 }
