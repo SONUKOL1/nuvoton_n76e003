@@ -5,24 +5,25 @@
 #include "Delay.h"
 //#include "lcd.h"
 #define bit_to_voltage_ratio 0.001220703125 // 5.0V divided by 4096 For 12-Bit ADC
-unsigned int ADC_read();
+unsigned int ADC_read(void);
 float voltage;
 char str_voltage[20];
 
 int myArray[9];
- 
+ unsigned int ADC_average(void);
 void sw_delay (int ms);
 int p=0;
-//char json[] = "{\"sensor\":\"gps\",\"time\":1351824120,\"data\":[48.756080,2.302038]}";
 int adc_data;
 
 void main(void){	               
 	
+	
+	  //P05_OpenDrain_Mode;
      // Set_All_GPIO_Quasi_Mode;
    // Enable_ADC_AIN0;
 	  InitialUART0_Timer1(115200);
 	 // TI = 1;
-	//P12_OpenDrain_Mode;
+	
   P14_Quasi_Mode;
   P15_Quasi_Mode;
   P12_Input_Mode;  
@@ -30,66 +31,62 @@ void main(void){
 	//Enable_ADC_AIN7;
 	//Timer3_Delay100ms(500);          
 	
-             while(1){
-									 
-							 
+  while(1){
+									 						 
 					    P14 = 1;
         sw_delay(100);
 							 
-		//  printf("\n Hello world!");						 
-							 
-    //	printf("  LED Status:%d", P14);
-						
-							 
+		   //  printf("\n Hello world!");						 
+												 
 							 Enable_ADC_AIN0;
 						//	 printf(" ADC0:%d",ADC_read());	
-							 myArray[0]= ADC_read();
-							 Disable_ADC;
+							 myArray[0]= ADC_average();
+							   Disable_ADC;
 							 
 							Enable_ADC_AIN1;
 						//	printf(" ADC1:%d",ADC_read()); 
-							 myArray[1]=ADC_read();
-              Disable_ADC;							 
+							 myArray[1]= ADC_average();
+                 Disable_ADC;							 
 							 
 								 Enable_ADC_AIN2;
 						//	 printf(" ADC2:%d",ADC_read());	
-							 myArray[2]= ADC_read();
-							 Disable_ADC;
+							 myArray[2]= ADC_average();
+							   Disable_ADC;
 							 
 						/*	Enable_ADC_AIN3;
-							printf(" ADC3:%d",ADC_read());	  */
-							 
+							printf(" ADC3:%d",ADC_average());	  
+							    Disable_ADC;  */
+									
 							 Enable_ADC_AIN4;
-							// printf(" ADC4:%d",ADC_read());	 
-							 myArray[4]= ADC_read();
+					 // printf(" ADC4:%d",ADC_read());	 
+							 myArray[4]= ADC_average();
 							 Disable_ADC;
 							 
 							Enable_ADC_AIN5;
-					//		printf(" ADC5:%d",ADC_read());	
-							myArray[5]= ADC_read();
+					//	printf(" ADC5:%d",ADC_read());	
+							myArray[5]= ADC_average();
 							 Disable_ADC;
 							 
 							  Enable_ADC_AIN6;
-							// printf(" ADC6:%d",ADC_read());	 
-							 myArray[6]= ADC_read();
-							 Disable_ADC;
+						// printf(" ADC6:%d",ADC_read());	 
+							 myArray[6]= ADC_average();
+					  	 Disable_ADC;
 							 
 							Enable_ADC_AIN7;
-						//	printf("  ADC7:%d",ADC_read());	 
-							myArray[7]= ADC_read();
+					//	printf("  ADC7:%d",ADC_read());	 
+							myArray[7]= ADC_average();
 							 Disable_ADC;
 							 
 							Enable_ADC_BandGap;
-						//	printf(" ADCref:%d",ADC_read());	
-							myArray[8]= ADC_read();
-							Disable_ADC;
+			  	//	printf(" ADCref:%d",ADC_read());	
+							myArray[8]= ADC_average();
+						  	Disable_ADC;
 							 
          //  voltage = ADC_read() * bit_to_voltage_ratio;
          //  sprintf( str_voltage, "Volt: %0.2fV", voltage);
          //    printf(" ADCr:%s",str_voltage); 
 							 
-         //   Timer3_Delay100ms(500);  this is uncomment 2 warning show and led not blink 
-						 
+         //   Timer3_Delay100ms(500);  this is uncomment 2 warning show and led not blink 				 
 						 	
  if(P12 == 0){ P15 = 0; } // printf(" P12:0"); }
      else { P15 = 1; } // printf(" P12:1"); }				 
@@ -106,9 +103,8 @@ void main(void){
   }
 
 
-unsigned int ADC_read(){
-  //register
- 	unsigned int adc_value ;//= 0x0000;
+unsigned int ADC_read(void){
+  register unsigned int adc_value = 0x0000;
   clr_ADCF;
   set_ADCS;                  
   while(ADCF == 0);
@@ -117,6 +113,24 @@ unsigned int ADC_read(){
   adc_value |= ADCRL;
   return adc_value;
 }
+
+
+unsigned int ADC_average(void)
+{
+    signed char samples = 16;
+    unsigned long value = 0;
+    
+    while(samples > 0)
+    {
+        value += ((unsigned long)ADC_read());
+        samples--;
+    };
+    
+    value >>= 4;
+    
+    return ((unsigned int)value);
+}
+
 
  
 // Software-based delay. Time is not accurate.
