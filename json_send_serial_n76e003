@@ -117,15 +117,17 @@ unsigned int ADC_read(void){
 
 unsigned int ADC_average(void)
 {
-    signed char samples = 50;
-    unsigned long value = 0;   
-    while(samples > 0)
+    int number_of_samples = 50;
+    unsigned long sum_of_readings = 0;
+    int average , count = 0;
+    
+    while (count < number_of_samples)
     {
-        value += ((unsigned long)ADC_read());
-        samples--;
-    }  
-    value /= 50; 
-    return ((unsigned int)value);
+        sum_of_readings += ADC_read();
+        count++;
+    }
+    average = sum_of_readings / number_of_samples;
+    return average;
 }
 
  
