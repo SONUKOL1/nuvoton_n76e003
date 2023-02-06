@@ -3,8 +3,8 @@
 #include "Function_define.h"
 #include "Common.h"
 #include "Delay.h"
-//#include "lcd.h"
 #define bit_to_voltage_ratio 0.001220703125 // 5.0V divided by 4096 For 12-Bit ADC
+ FOSC_240000;
 unsigned int ADC_read(void);
 float voltage;
 char str_voltage[20];
@@ -15,9 +15,11 @@ int myArray[9];
 int p=0;
 int adc_data;
 
-void main(void){	               
+void main(void){	
 	
-	
+               EX0 = 1; // enable external interrupt 0
+               EA = 1; // enable global interrupt
+
 	  //P05_OpenDrain_Mode;
      // Set_All_GPIO_Quasi_Mode;
    // Enable_ADC_AIN0;
@@ -37,7 +39,7 @@ void main(void){
 							 
 		   //  printf("\n Hello world!");						 
 												 
-							 Enable_ADC_AIN0;
+			  				 Enable_ADC_AIN0;
 						//	 printf(" ADC0:%d",ADC_read());	
 							 myArray[0]= ADC_average();
 							   Disable_ADC;
@@ -89,13 +91,15 @@ void main(void){
  if(P12 == 0){ P15 = 0; } // printf(" P12:0"); }
      else { P15 = 1; } // printf(" P12:1"); }				 
 			 						 					 					
-    	 P14 =! P14;
+    	 
 		 
  printf("{\"ADC0\":%u,\"ADC1\":%u,\"ADC2\":%u,\"ADC3\":%u,\"ADC4\":%u}",myArray[0] ,myArray[1] ,myArray[2],myArray[3], myArray[4]);
   printf("{\"ADC5\":%u,\"ADC6\":%u,\"ADC7\":%u,\"ADCRef\":%u}",myArray[5],myArray[6],myArray[7],myArray[8]);
 		 printf("\n"); 
 		 
-		 Timer0_Delay1ms(100);	
+		 P14 =~ P14;
+		 
+		 Timer0_Delay1ms(500);	
     }
   }
 
@@ -112,7 +116,7 @@ unsigned int ADC_read(void){
 }
 
 
-unsigned int ADC_average(void){
+ unsigned int ADC_average(void){
     int number_of_samples = 50;
     unsigned long sum_of_readings = 0;
     int average , count = 0;
@@ -125,3 +129,9 @@ unsigned int ADC_average(void){
     average = sum_of_readings / number_of_samples;
     return average;
 }
+
+
+void INT0_ISR (void) interrupt 0{
+    P14=0; // toggle P14 state  
+        
+} 
