@@ -4,7 +4,10 @@
 #include "Common.h"
 #include "Delay.h"
 #define bit_to_voltage_ratio 0.001220703125 // 5.0V divided by 4096 For 12-Bit ADC
+
+#define LED P14
  FOSC_240000;
+ 
 unsigned int ADC_read(void);
 float voltage;
 char str_voltage[20];
@@ -23,13 +26,13 @@ void main(void){
 	  //P05_OpenDrain_Mode;
      // Set_All_GPIO_Quasi_Mode;
    // Enable_ADC_AIN0;
-	  InitialUART0_Timer1(115200);
+	  InitialUART0_Timer3(115200); // timer diffrent Timer1_Delay10ms(50);
 	 // TI = 1;
 	
-  P14_Quasi_Mode;
+ // LED_Quasi_Mode;
   P15_Quasi_Mode;
   P12_Input_Mode;  
-	//Set_All_GPIO_Quasi_Mode;
+	Set_All_GPIO_Quasi_Mode;
 	//Enable_ADC_AIN7;       
 	
   while(1){
@@ -91,15 +94,14 @@ void main(void){
  if(P12 == 0){ P15 = 0; } // printf(" P12:0"); }
      else { P15 = 1; } // printf(" P12:1"); }				 
 			 						 					 					
-    	 
+ printf("\n"); 
+  printf("{\"ADC0\":%u,\"ADC1\":%u,\"ADC2\":%u,\"ADC3\":%u,\"ADC4\":%u}",myArray[0] ,myArray[1] ,myArray[2],myArray[3], myArray[4]);
+   printf("{\"ADC5\":%u,\"ADC6\":%u,\"ADC7\":%u,\"ADCRef\":%u}",myArray[5],myArray[6],myArray[7],myArray[8]);	 
 		 
- printf("{\"ADC0\":%u,\"ADC1\":%u,\"ADC2\":%u,\"ADC3\":%u,\"ADC4\":%u}",myArray[0] ,myArray[1] ,myArray[2],myArray[3], myArray[4]);
-  printf("{\"ADC5\":%u,\"ADC6\":%u,\"ADC7\":%u,\"ADCRef\":%u}",myArray[5],myArray[6],myArray[7],myArray[8]);
-		 printf("\n"); 
+		 LED =! LED;
 		 
-		 P14 =~ P14;
+		 Timer1_Delay10ms(50);  // Timer1_Delay10ms(50);  50==500MS
 		 
-		 Timer0_Delay1ms(500);	
     }
   }
 
@@ -132,6 +134,7 @@ unsigned int ADC_read(void){
 
 
 void INT0_ISR (void) interrupt 0{
-    P14=0; // toggle P14 state  
+   // P14=0;  
+	printf(" interrupt "); 
         
 } 
