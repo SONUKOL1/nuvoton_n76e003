@@ -1,0 +1,35 @@
+#include "N76E003.h"
+#include "SFR_Macro.h"
+#include "Function_define.h"
+#include "Common.h"
+#include "Delay.h"
+
+//sbit LED1 = P1^4;
+//sbit LED2 = P1^2;
+
+void External0_ISR() interrupt 0
+{  //LED1 = ~LED1;
+	  P12 = 0; }
+
+void External1_ISR() interrupt 2
+{  // LED2 = ~LED2;
+	    P14 = 0; }
+
+void main()
+{   int i,p;
+   	InitialUART0_Timer3(115200);
+    Set_All_GPIO_Quasi_Mode;
+    IT0 = 1; // set INT0 to trigger on the falling edge
+    IT1 = 1; // set INT1 to trigger on the falling edge
+    EX0 = 1; // enable external interrupt 0
+    EX1 = 1; // enable external interrupt 1
+    EA = 1;  // enable global interrupts
+
+    while (1)
+    {    
+			i=P12 = ~P12;
+		  p=P14 = ~P14;
+		 printf("\n P12:%d  P14:%d", i, p); //led status
+		  Timer1_Delay10ms(100);
+    }
+}
