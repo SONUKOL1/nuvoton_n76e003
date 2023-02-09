@@ -9,26 +9,23 @@
 
 void External0_ISR() interrupt 0
 {  //LED1 = ~LED1;
-	  P12 = 0; //clr_P12; clr=0
+	clr_EA;  P12 = 0; //clr_P12; clr=0
 }
 
 void External1_ISR() interrupt 2
 {  // LED2 = ~LED2;
-	    P14 = 0; // clr_P14; clr=0
+	  clr_EA;  P14 = 0; // clr_P14; clr=0
 }
 
 void main()
 {   
    	InitialUART0_Timer3(115200);
     Set_All_GPIO_Quasi_Mode;
-    IT0 = 1; // set INT0 to trigger on the falling edge
-    IT1 = 1; // set INT1 to trigger on the falling edge
-    EX0 = 1; // enable external interrupt 0
-    EX1 = 1; // enable external interrupt 1
-    EA = 1;  // enable global interrupts
+   // IT0 = 1; // set INT0 to trigger on the falling edge
+   // IT1 = 1; // set INT1 to trigger on the falling edge
 
-    while (1)
-    {    
+    while (1){ 
+	  set_EA; set_EX0; set_EX1; // EA = 1; EX0 = 1; EX1 = 1;
 		set_P12; set_P14;  // set =1
     Timer0_Delay1ms(1000);
     clr_P12; clr_P14;  //set =0
