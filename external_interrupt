@@ -9,14 +9,16 @@
 
 void External0_ISR() interrupt 0
 {  //LED1 = ~LED1;
-	  P12 = 0; }
+	  P12 = 0; //clr_P12; clr=0
+}
 
 void External1_ISR() interrupt 2
 {  // LED2 = ~LED2;
-	    P14 = 0; }
+	    P14 = 0; // clr_P14; clr=0
+}
 
 void main()
-{   int i,p;
+{   
    	InitialUART0_Timer3(115200);
     Set_All_GPIO_Quasi_Mode;
     IT0 = 1; // set INT0 to trigger on the falling edge
@@ -27,9 +29,9 @@ void main()
 
     while (1)
     {    
-			i=P12 = ~P12;
-		  p=P14 = ~P14;
-		 printf("\n P12:%d  P14:%d", i, p); //led status
-		  Timer1_Delay10ms(100);
+		set_P12; set_P14;  // set =1
+    Timer0_Delay1ms(1000);
+    clr_P12; clr_P14;  //set =0
+    Timer0_Delay1ms(1000);
     }
 }
