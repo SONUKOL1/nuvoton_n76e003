@@ -30,16 +30,16 @@ void set_PWM(unsigned int channel, unsigned int value){
       PWM3H = ((value & 0xFF00) >> 8);
       break;
     case 4:
-			set_SFRPAGE; 
+	set_SFRPAGE; 
       PWM4L = (value & 0x00FF);
       PWM4H = ((value & 0xFF00) >> 8);
-		  clr_SFRPAGE;
+       clr_SFRPAGE;
       break;
     case 5:
-			set_SFRPAGE; 
+	set_SFRPAGE; 
       PWM5L = (value & 0x00FF);
       PWM5H = ((value & 0xFF00) >> 8);
-		  clr_SFRPAGE;
+        clr_SFRPAGE;
       break; 
   }
    set_LOAD;
