@@ -30,13 +30,13 @@ void set_PWM(unsigned int channel, unsigned int value){
       PWM3H = ((value & 0xFF00) >> 8);
       break;
     case 4:
-	set_SFRPAGE; 
+        set_SFRPAGE; 
       PWM4L = (value & 0x00FF);
       PWM4H = ((value & 0xFF00) >> 8);
        clr_SFRPAGE;
       break;
     case 5:
-	set_SFRPAGE; 
+         set_SFRPAGE; 
       PWM5L = (value & 0x00FF);
       PWM5H = ((value & 0xFF00) >> 8);
         clr_SFRPAGE;
@@ -47,7 +47,8 @@ void set_PWM(unsigned int channel, unsigned int value){
 
 void main(void){
   signed int value = 0;
- InitialUART0_Timer3(115200);////
+  InitialUART0_Timer3(115200);/////
+  printf("\nWELLCOME");
   Set_All_GPIO_Quasi_Mode;
   PWM_IMDEPENDENT_MODE;
   PWM_EDGE_TYPE;
@@ -72,6 +73,7 @@ void main(void){
             PWM5_P03_OUTPUT_ENABLE;   set_PWM(5,value);
             PWM5_P15_OUTPUT_ENABLE;   set_PWM(5,value);
             Timer1_Delay10ms(3);
+             printf("\nPWM:%d",value);
             }
 							
             for(value = 1023; value > 0; value -= 10){
@@ -83,10 +85,12 @@ void main(void){
             PWM3_P04_OUTPUT_ENABLE;   set_PWM(3,value); 
             PWM0_P12_OUTPUT_ENABLE;   set_PWM(0,value);
             PWM5_P03_OUTPUT_ENABLE;   set_PWM(5,value);
-            PWM5_P15_OUTPUT_ENABLE;   set_PWM(5,value);
-	    PWM4_P01_OUTPUT_ENABLE;   set_PWM(4,value);
+            PWM5_P15_OUTPUT_ENABLE;   set_PWM(5,value);	
+            PWM4_P01_OUTPUT_ENABLE;   set_PWM(4,value);
             Timer1_Delay10ms(3); 
-	  }
-    //Timer0_Delay1ms(100);
-     }
+            printf("\nPWM:%d",value);	  
+        }
+          printf("\nSTOP!");			
+         Timer1_Delay10ms(100);		
+    }
 }
