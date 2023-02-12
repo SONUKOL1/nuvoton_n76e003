@@ -6,8 +6,6 @@
 #include "string.h"
 #include "lcd.h"
 
-const char txt1[] = {"SENSOR DATA:"};// global use
-
 void show_value(int value);
 void center_display(const char *text, int line);
 void scroll_display(const char *text, int line);
@@ -15,7 +13,7 @@ void scroll_display(const char *text, int line);
 int values[] = {0, 409, 818, 1227, 1636, 2045, 2454, 2863, 3272, 4091};
 
 void main(void)
-{     
+{   unsigned long count;
     unsigned char s = 0;
     const char txt2[] = {"HELLO WORLD!"};
     const char txt3[] = {"WELLCOME!"};
@@ -29,24 +27,28 @@ void main(void)
     Timer3_Delay100ms(30);
     LCD_clear_home();
 
-    center_display(txt1, 0);
-    Timer3_Delay100ms(40);
 
     while(1)
-    {
-        scroll_display(txt4, 1);
-        show_value(values[s % 10]);
-        s++;
-        Timer3_Delay100ms(4);
+    {      			
+			  LCD_clear_home();
+	      center_display("SENSOR DATA:", 0);
+			  show_value(values[s % 10]);         
+        Timer3_Delay100ms(20);
+			
+        LCD_clear_home();
+	      center_display("COUNTER:", 0);
+        show_value(count);			
+	      Timer3_Delay100ms(20);
+	
+			 scroll_display(txt4, 1);
+			
+       s++; count++;
     };
 }
 
 void show_value(int value)
 {  
-   unsigned char ch = 0x00;  LCD_clear_home();
-	
-	center_display(txt1, 0);
-  Timer3_Delay100ms(20);
+   unsigned char ch = 0x00;  
 	
    ch = ((value / 1000) + 0x30);
    LCD_goto(6, 1);
@@ -79,7 +81,7 @@ void scroll_display(const char *text, int line)
 			  LCD_clear_home();
         LCD_goto(0, line);
         LCD_putstr(&text[i]);
-        Timer3_Delay100ms(1);
+        Timer3_Delay100ms(0.3);
     }
-
+  LCD_clear_home();
 }
