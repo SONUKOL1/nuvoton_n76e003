@@ -5,83 +5,69 @@
 #include "Delay.h"
 #include "string.h"
 #include "lcd.h"
+#include "math.h"
 
-void show_value(int value);
-void center_display(const char *text, int line);
-void scroll_display(const char *text, int line);
+void Number_display(int value,int column, int row);
+void String_display(const char *text, int column, int row);
+void scroll_String_display(const char *text, int column, int row);
 
 int values[] = {0, 409, 818, 1227, 1636, 2045, 2454, 2863, 3272, 4091};
 
 void main(void)
-{   unsigned long count;
+{  
+    unsigned long count = 0;
     unsigned char s = 0;
-    const char txt2[] = {"HELLO WORLD!"};
-    const char txt3[] = {"WELLCOME!"};
-    const char txt4[] = {"THANKYOU..!"};
-		
+    const char str2[] = "HELLO WORLD!";
+    const char str3[] = "WELLCOME!";
+    const char str4[] = "THANKYOU..!";
+
     LCD_init();
     LCD_clear_home();
 
-    center_display(txt2, 0);
-    center_display(txt3, 1);
+    String_display(str2, 2, 0);
+    String_display(str3, 3, 1);
     Timer3_Delay100ms(30);
     LCD_clear_home();
 
-
     while(1)
-    {      			
-			  LCD_clear_home();
-	      center_display("SENSOR DATA:", 0);
-			  show_value(values[s % 10]);         
-        Timer3_Delay100ms(20);
-			
+    {      
         LCD_clear_home();
-	      center_display("COUNTER:", 0);
-        show_value(count);			
-	      Timer3_Delay100ms(20);
-	
-			 scroll_display(txt4, 1);
-			
-       s++; count++;
+        String_display("SENSOR: ", 0, 0);
+        Number_display(values[s++ % 10], 8, 0);
+        Timer3_Delay100ms(5);
+
+        String_display("COUNTER: ", 0, 1);
+        Number_display(count++,9,1);
+        Timer3_Delay100ms(10);
+
+        scroll_String_display(str4, 1, 0);
     };
 }
 
-void show_value(int value)
-{  
-   unsigned char ch = 0x00;  
-	
-   ch = ((value / 1000) + 0x30);
-   LCD_goto(6, 1);
-   LCD_putchar(ch);
-   ch = (((value / 100) % 10) + 0x30);
-   LCD_goto(7, 1);
-   LCD_putchar(ch);
-   ch = (((value / 10) % 10) + 0x30);
-   LCD_goto(8, 1);
-   LCD_putchar(ch);
-   ch = ((value % 10) + 0x30);
-   LCD_goto(9, 1);
-   LCD_putchar(ch);
-}
 
-void center_display(const char *text, int line)
-{    
-    int start_pos = (16 - strlen(text)) / 2;
-    if ((16 - strlen(text)) % 2 != 0)
-        start_pos++;
-
-      LCD_goto(start_pos, line);
-      LCD_putstr(text);
-}
-
-void scroll_display(const char *text, int line)
-{
-    int i; LCD_clear_home();
-    for (i = 0; i <= strlen(text); i++) {
-			  LCD_clear_home();
-        LCD_goto(0, line);
-        LCD_putstr(&text[i]);
-        Timer3_Delay100ms(0.3);
+void Number_display(int value, int column, int row)
+{  int i;
+    for (i = 3; i >= 0; i--)
+    {   LCD_goto(column++, row);
+        LCD_putchar((value / (int)pow(10, i) % 10) + 0x30);
     }
-  LCD_clear_home();
+}
+
+
+void String_display(const char *text, int column, int row)
+{
+    LCD_goto(column, row);
+    LCD_putstr(text);
+}
+
+void scroll_String_display(const char *text, int column, int row)
+{ int i; LCD_clear_home(); LCD_goto(column, row);
+         LCD_putstr(text); Timer3_Delay100ms(2);
+	
+    for (i =0; i < strlen(text); i++)
+    {   LCD_clear_home();
+        LCD_goto(column, row);
+        LCD_putstr(&text[i]);
+        Timer3_Delay100ms(.1);
+    }
 }
