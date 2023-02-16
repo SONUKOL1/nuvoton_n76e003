@@ -6,18 +6,18 @@
 uint8_t ir_data[IR_DATA_LEN];
 
 void process_ir_data(uint8_t ir_data[]) {
-    int m = ir_data[2];
+    int m = ir_data[2]; 
     int n = ir_data[3];
     printf("m:%d  n:%d\n", m, n);
 
     if (m == 112 && n == 143) {
         P14 = !P14;
-        printf("P14:%d\n",(bit)P14);
+        printf("P14:%d\n",(short)P14);
     }
 
     if (m == 88 && n == 167) {
         P12 = !P12;
-      printf("P12:%d\n",(bit)P12);
+      printf("P12:%d\n",(int)P12);
     }
 }
 
