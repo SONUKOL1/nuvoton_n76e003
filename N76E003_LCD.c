@@ -7,20 +7,22 @@
 #include "lcd.h"
 #include "math.h"
 
-void Number_display(int value,int column, int row);
-void String_display(const char *text, int column, int row);
-void scroll_String_display(const char *text, int column, int row);
+#define str2  "HELLO WORLD!"
+#define str3  "WELLCOME!"
+#define str4  "THANKYOU..!"
+
+void Number_display(int value,uint8_t column, uint8_t row);
+void String_display(const char *text, uint8_t column, uint8_t row);
+void scroll_String_display(const char *text, uint8_t column, uint8_t row);
 
 int values[] = {0, 409, 818, 1227, 1636, 2045, 2454, 2863, 3272, 4091};
 
 void main(void)
 {  
     unsigned long count = 0;
-    unsigned char s = 0;
-    const char str2[] = "HELLO WORLD!";
-    const char str3[] = "WELLCOME!";
-    const char str4[] = "THANKYOU..!";
+    uint8_t s = 0;
 
+  
     LCD_init();
     LCD_clear_home();
 
@@ -45,8 +47,8 @@ void main(void)
 }
 
 
-void Number_display(int value, int column, int row)
-{  int i;
+void Number_display(int value, uint8_t column, uint8_t row)
+{  short i;
     for (i = 3; i >= 0; i--)
     {   LCD_goto(column++, row);
         LCD_putchar((value / (int)pow(10, i) % 10) + 0x30);
@@ -54,20 +56,20 @@ void Number_display(int value, int column, int row)
 }
 
 
-void String_display(const char *text, int column, int row)
+void String_display(const char *text, uint8_t column, uint8_t row)
 {
     LCD_goto(column, row);
     LCD_putstr(text);
 }
 
-void scroll_String_display(const char *text, int column, int row)
-{ int i; LCD_clear_home(); LCD_goto(column, row);
+void scroll_String_display(const char *text, uint8_t column, uint8_t row)
+{ short i; LCD_clear_home(); LCD_goto(column, row);
          LCD_putstr(text); Timer3_Delay100ms(2);
-	
+    
     for (i =0; i < strlen(text); i++)
     {   LCD_clear_home();
         LCD_goto(column, row);
         LCD_putstr(&text[i]);
-        Timer3_Delay100ms(.1);
+        Timer3_Delay100ms(1);
     }
 }
