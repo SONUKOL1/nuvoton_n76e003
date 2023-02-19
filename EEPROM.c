@@ -154,27 +154,19 @@ unsigned char read_data_byte(unsigned int code *address)
 }
 
 
-void lcd_print_c(unsigned char x_pos, unsigned char y_pos, unsigned char value)
-{  
+void lcd_print_c(unsigned char x_pos, unsigned char y_pos, unsigned char value) {  
   LCD_goto(x_pos, y_pos);
-  LCD_putchar((value / 100) + 0x30);
-  LCD_goto((x_pos + 1), y_pos);
-  LCD_putchar(((value % 10) / 10) + 0x30);
-  LCD_goto((x_pos + 2), y_pos);
-  LCD_putchar((value % 10) + 0x30);
+  LCD_putchar(value/100 + '0');
+  LCD_putchar(value/10%10 + '0');
+  LCD_putchar(value%10 + '0');
 }
 
 
-void lcd_print_i(unsigned char x_pos, unsigned char y_pos, unsigned int value)
-{  
+void lcd_print_i(unsigned char x_pos, unsigned char y_pos, unsigned int value) {  
   LCD_goto(x_pos, y_pos);
-  LCD_putchar((value / 10000) + 0x30);
-  LCD_goto((x_pos + 1), y_pos);
-  LCD_putchar(((value % 10000) / 1000) + 0x30);  
-  LCD_goto((x_pos + 2), y_pos);
-  LCD_putchar(((value % 1000) / 100) + 0x30);
-  LCD_goto((x_pos + 3), y_pos);
-  LCD_putchar(((value % 100) / 10) + 0x30);
-  LCD_goto((x_pos + 4), y_pos);
-  LCD_putchar((value % 10) + 0x30);
+  LCD_putchar(value/10000 + '0');
+  LCD_putchar(value/1000%10 + '0');
+  LCD_putchar(value/100%10 + '0');
+  LCD_putchar(value/10%10 + '0');
+  LCD_putchar(value%10 + '0');
 }
