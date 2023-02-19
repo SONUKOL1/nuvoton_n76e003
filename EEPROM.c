@@ -7,7 +7,6 @@
 
 #define BASE_ADDRESS 3700
 
-
 void write_data_byte(unsigned int address, unsigned char value);
 unsigned char read_data_byte(unsigned int code *address);
 void lcd_print_c(unsigned char x_pos, unsigned char y_pos, unsigned char value);
@@ -20,42 +19,44 @@ void main (void)
 	unsigned char data_value = 0;
 	
 	Set_All_GPIO_Quasi_Mode;
+	P14=read_data_byte(5000);	 
 	
 	LCD_init();
   LCD_clear_home(); 
 		
 	LCD_goto(0, 0); 
-	LCD_putstr("R Addr:");
+	LCD_putstr("R ADDR:");
 	LCD_goto(0, 1); 
-	LCD_putstr("R Data:");
-	
-	P14=read_data_byte(5000);
+	LCD_putstr("R DATA:");
 	
 	for(s = 0; s <= 9; s++)
 	{
 		data_value = read_data_byte((s + BASE_ADDRESS));		
-		lcd_print_i(11, 0, (s + BASE_ADDRESS));
-		lcd_print_c(13, 1, data_value);
-		Timer0_Delay1ms(50);
+		lcd_print_i(8, 0, (s + BASE_ADDRESS));
+		lcd_print_c(8, 1, data_value);
 	}
 
-	 Timer0_Delay1ms(500);
+	 Timer0_Delay1ms(100);
 		
 	LCD_goto(0, 0); 
-	LCD_putstr("W Addr:");
+	LCD_putstr("W ADDR:");
 	LCD_goto(0, 1); 
-	LCD_putstr("W Data:");
+	LCD_putstr("W DATA:");
 	
 	for(s = 0; s <= 9; s++)
 	{
 		write_data_byte((s + BASE_ADDRESS), s);
-		lcd_print_i(11, 0, (s + BASE_ADDRESS));
-		lcd_print_c(13, 1, s);
-		Timer0_Delay1ms(20);
-	}  
+		lcd_print_i(8, 0, (s + BASE_ADDRESS));
+		lcd_print_c(8, 1, s);
+	} 
+	
+	 LCD_clear_home(); 
+	 LCD_goto(0, 0);
+	 LCD_putstr("STATUS:");
 	
 	while(1)
-	{ Timer0_Delay1ms(5000);
+	{ lcd_print_c(8, 0,(!P14));
+		Timer0_Delay1ms(3000);
 		P14=!P14; write_data_byte(5000, P14);
 	};
 }
