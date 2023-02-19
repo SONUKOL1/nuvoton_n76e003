@@ -5,7 +5,7 @@
 #include "lcd.h"
 #include "delay.h"
 
-#define BASE_ADDRESS  			3700
+#define BASE_ADDRESS 3700
 
 
 void write_data_byte(unsigned int address, unsigned char value);
@@ -20,46 +20,43 @@ void main (void)
 	unsigned char data_value = 0;
 	
 	Set_All_GPIO_Quasi_Mode;
-	P15_PushPull_Mode;
 	
 	LCD_init();
   LCD_clear_home(); 
-	
-	clr_P15;	
+		
 	LCD_goto(0, 0); 
 	LCD_putstr("R Addr:");
 	LCD_goto(0, 1); 
 	LCD_putstr("R Data:");
 	
-	for(s = 0; s <= 8; s++)
+	P14=read_data_byte(5000);
+	
+	for(s = 0; s <= 9; s++)
 	{
-		data_value = read_data_byte((s + BASE_ADDRESS));
-		Timer0_Delay1ms(1);
-		
+		data_value = read_data_byte((s + BASE_ADDRESS));		
 		lcd_print_i(11, 0, (s + BASE_ADDRESS));
 		lcd_print_c(13, 1, data_value);
-		Timer0_Delay1ms(60);
+		Timer0_Delay1ms(50);
 	}
 
 	 Timer0_Delay1ms(500);
-	
-  set_P15;	
+		
 	LCD_goto(0, 0); 
 	LCD_putstr("W Addr:");
 	LCD_goto(0, 1); 
 	LCD_putstr("W Data:");
 	
-	for(s = 0; s <= 8; s++)
+	for(s = 0; s <= 9; s++)
 	{
 		write_data_byte((s + BASE_ADDRESS), s);
-		Timer0_Delay1ms(1);
 		lcd_print_i(11, 0, (s + BASE_ADDRESS));
 		lcd_print_c(13, 1, s);
-		Timer0_Delay1ms(30);
+		Timer0_Delay1ms(20);
 	}  
 	
 	while(1)
-	{
+	{ Timer0_Delay1ms(5000);
+		P14=!P14; write_data_byte(5000, P14);
 	};
 }
 
